@@ -9,23 +9,22 @@ router.get('/',function(req,res){
     res.json({message:'hoorary! welcome to our api!'});
 });
 
+//Safer but longer than any of these
+//http://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
+var getExternalIP = function(req){
+    return req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
+}
+
 router.route('/host')
     //create a host
     .post(function(req,res) {
-        console.log("Beging processing a POST Host request");
-        /*var host = new GameHost();
-        host.name = req.body.name;
-        console.log("Made a host: "+ host);
-        host.save(function(err){
-            console.log("Saved that host");
-            if(err)
-                res.send(err);
-            res.json({message: "Host created!"});
-        });*/
+        console.log("Begining processing a POST Host request");
         var newHost = {
-            name:req.body.name,
             internalIP:req.body.internalIP,
-            externalIP:req.body.externalIP
+            externalIP:getExternalIP(req)
         };
         GameHost.createHost(newHost,function(err){
             if(err){
@@ -37,6 +36,8 @@ router.route('/host')
             }
         });
     })
+
+router.route('/host/all')
     //Get all the hosts (for debugging)
     .get(function(req,res){
         console.log("Starting to get all the hosts");
@@ -44,6 +45,34 @@ router.route('/host')
             if(err)
                 res.send(err);
             res.json(hosts);
+        });
+    });
+
+router.route('/host/myIP')
+    //get some internalIPs matching the external
+    .get(function(req,res){
+        var extIP = getExternalIP(req);
+        GameHost.getInternalIPs(extIP,function(err,ips){
+            if(err)
+                res.send(err);
+            res.json(ips);
+        });
+    });
+
+router.route('/host/:internalIP')
+    //delete host with that internal IP (and that externalIP)
+    .delete(function(req,res){
+        host = {
+            internalIP:req.params.internalIP,
+            externalIP:getExternalIP(req)
+        };
+        GameHost.deleteHost(host,function(err){
+            if(err)
+                res.send(err);
+            res.json({
+                success:true,
+                message:('Successfully deleted for IP: '+req.params.internalIP)
+            });
         });
     });
 

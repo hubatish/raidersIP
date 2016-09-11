@@ -80,10 +80,22 @@ var getAllHosts = function(next){
     });
 }
 
+//Get all Internal IPs matching an external IP
+var getInternalIPs = function(externalIP,next){
+    collection.find({externalIP:externalIP}).toArray(function(err,hosts){
+        if(err)
+            next(err);
+        else{
+            next(null,hosts);
+        }
+    });
+}
+
 module.exports = 
 {
     createHost:createHost,
     deleteHost:deleteHost,
-    getAllHosts:getAllHosts
+    getAllHosts:getAllHosts,
+    getInternalIPs:getInternalIPs
 };
 
