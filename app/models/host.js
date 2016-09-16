@@ -1,31 +1,3 @@
-/*var mongoose = require('mongoose');
-
-console.log("Attempting antyhing to do with mongoose"); //shown
-
-var db = mongoose.connection;
-db.on('error',console.error.bind(console,'db connection error:')); //not shown
-db.once('open',function(){
-    console.log("Successful connection to db!"); //not shown
-});
-
-mongoose.connect('mongodb://localhost:27017/local',function(err){
-    console.log("some kinda connection made"); //not shown
-    if(err)
-    {
-        console.log("err: "+err);
-    }
-});
-
-
-var HostSchema = new mongoose.Schema({
-    name: String,
-    LocalIP: String,
-    ExternalIP: String
-});
-
-module.exports = mongoose.model('GameHost',HostSchema);
-*/
-
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 var url = "mongodb://localhost:27017/host";
@@ -44,10 +16,15 @@ MongoClient.connect(url,function(err,database){
 });
 
 var createHost = function(newHost,next){
-    console.log("Er, what is global db? "+db);
-    console.log("Adding host");
+    console.log("Adding host"+newHost.internalIP);
 
-    collection.update({internalIP:newHost.interntalIP,externalIP:newHost.externalIP},newHost,{upsert:true},function(err,result){
+    newHost.dateUpdated = new Date();
+
+    collection.update(
+        {
+            internalIP:newHost.interntalIP,
+            externalIP:newHost.externalIP
+        },newHost,{upsert:true},function(err,result){
         if(err)
             next(err);
         else{
@@ -80,12 +57,26 @@ var getAllHosts = function(next){
     });
 }
 
+var minutesToExpire = 70;
+
 //Get all Internal IPs matching an external IP
 var getInternalIPs = function(externalIP,next){
     collection.find({externalIP:externalIP}).toArray(function(err,hosts){
         if(err)
             next(err);
         else{
+            //filter out too old hosts
+            var cutOffDate = new Date();
+            cutOffDate.setMinutes(cutOffDate.getMinutes()-minutesToExpire);
+            for(var i=hosts.length-1;i>=0;i-=1){
+                if(hosts[i].dateUpdated < cutOffDate){
+                    var host = hosts[i]; //er, playing it safe with scoping
+                    deleteHost(host,function(err,result){
+                        console.log("Tried to delete too old host, did err?"+err);
+                    });
+                    hosts.splice(i,1);
+                }
+            }
             next(null,hosts);
         }
     });

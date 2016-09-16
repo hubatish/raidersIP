@@ -1,5 +1,7 @@
 // Zach Howell Node Server
 //
+// Tutorial started from here:
+// https://scotch.io/tutorials/build-a-restful-api-using-node-and-express-4
 
 var express = require('express');
 var app = express(); //made an app!
