@@ -35,7 +35,7 @@ router.route('/host')
                 res.json({success:true,message:"Host created"});
             }
         });
-    })
+    });
 
 router.route('/host/all')
     //Get all the hosts (for debugging)
@@ -74,6 +74,25 @@ router.route('/host/:internalIP')
                 message:('Successfully deleted for IP: '+req.params.internalIP)
             });
         });
+    });
+
+//Redirect users to appropriate download pages
+var detectBrowser = require('./detectBrowser.js')
+router.route('/QRCode')
+    .get(function(req, res){
+        var userAgent = req.headers['user-agent'];
+        var os = detectBrowser.getMobileOperatingSystem(userAgent);
+
+        var endUrl = 'http://fancierfish.net';
+        switch(os){
+            case 'Android': 
+                endUrl = 'https://play.google.com/store?hl=en';
+                break;
+            case 'iOS':
+                endUrl = 'https://www.appstore.com/';
+                break;
+        }
+        res.redirect(endUrl);
     });
 
 module.exports = router;
