@@ -11,8 +11,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-// process.env.PORT no idea what does, didn't access open aws port
-var port = process.env.PORT || 8241;
+var port = 8241;
 
 var router = require('./routes.js');
 app.use('/',router);
