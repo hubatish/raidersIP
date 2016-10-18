@@ -23,3 +23,7 @@ function getMobileOperatingSystem(userAgent) {
 
     return "unknown";
 }
+
+module.exports = {
+	getMobileOperatingSystem = getMobileOperatingSystem;
+};
