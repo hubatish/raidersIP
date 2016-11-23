@@ -86,7 +86,7 @@ router.route('/QRCode')
         var endUrl = 'http://fancierfish.net';
         switch(os){
             case 'Android': 
-                endUrl = 'https://play.google.com/store?hl=en';
+                endUrl = 'https://play.google.com/store/apps/details?id=com.Drexel.FancierFish.RemoteForRaiders';
                 break;
             case 'iOS':
                 endUrl = 'https://www.appstore.com/';
