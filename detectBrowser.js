@@ -6,8 +6,9 @@
  */
 function getMobileOperatingSystem(userAgent) {
   //var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    console.log("user agent: "+userAgent);
 
-      // Windows Phone must come first because its UA also contains "Android"
+    // Windows Phone must come first because its UA also contains "Android"
     if (/windows phone/i.test(userAgent)) {
         return "Windows Phone";
     }
@@ -25,5 +26,5 @@ function getMobileOperatingSystem(userAgent) {
 }
 
 module.exports = {
-	getMobileOperatingSystem = getMobileOperatingSystem;
+	getMobileOperatingSystem : getMobileOperatingSystem
 };
