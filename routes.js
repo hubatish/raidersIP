@@ -89,7 +89,7 @@ router.route('/QRCode')
                 endUrl = 'https://play.google.com/store/apps/details?id=com.Drexel.FancierFish.RemoteForRaiders';
                 break;
             case 'iOS':
-                endUrl = 'https://www.appstore.com/';
+                endUrl = 'https://itunes.apple.com/us/app/remote-for-raiders/id1152129016?mt=8';
                 break;
         }
         res.redirect(endUrl);
