@@ -1,6 +1,14 @@
 To start, run 
 forever start server.js
 
+A little fancier:
+forever start -l gen.log -o out.log -e err.log server.js
+
+And to stop:
+forever list
+forever stop 0 #(some index)
+
+
 First time:
 remember to 
 npm install

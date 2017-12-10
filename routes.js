@@ -106,8 +106,8 @@ router.route('/werewolf/joinGame')
             id: req.body.id,
             name: req.body.name,
         };
-        GameHost.createHost(newPlayer, function(err) {
-            if(err) {
+        GameHost.joinGame(newPlayer, function(err){
+            if(err){
                 console.log("error adding",err);
                 res.json({success:false,message:err});
             }
