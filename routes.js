@@ -42,9 +42,11 @@ router.route('/host/all')
     .get(function(req,res){
         console.log("Starting to get all the hosts");
         GameHost.getAllHosts(function(err,hosts){
-            if(err)
+            if(err) {
                 res.send(err);
-            res.json(hosts);
+            } else {
+                res.json(hosts);
+            }
         });
     });
 
@@ -53,9 +55,11 @@ router.route('/host/myIP')
     .get(function(req,res){
         var extIP = getExternalIP(req);
         GameHost.getInternalIPs(extIP,function(err,ips){
-            if(err)
+            if(err) {
                 res.send(err);
-            res.json(ips);
+            } else {
+                res.json(ips);
+            }
         });
     });
 
@@ -102,13 +106,28 @@ router.route('/werewolf/joinGame')
             id: req.body.id,
             name: req.body.name,
         };
-        GameHost.createHost(newPlayer, function(err){
-            if(err){
+        GameHost.createHost(newPlayer, function(err) {
+            if(err) {
                 console.log("error adding",err);
                 res.json({success:false,message:err});
             }
-            else{
+            else {
                 res.json({success:true,message:"Created"});
+            }
+        });
+    });
+
+router.route('/werewolf/role')
+    .post(function(req,res) {
+        console.log("Begining processing a get role request");
+        var id = req.body.id;
+        GameHost.getPlayerRole(id, function(err, role) {
+            if(err) {
+                console.log("error adding",err);
+                res.json({role:-1,message:err});
+            }
+            else {
+                res.json({role});
             }
         });
     });

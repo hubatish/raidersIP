@@ -122,7 +122,11 @@ const joinGame = function(name, id, next) {
 let gameInProgress = false;
 
 const getPlayerRole = function(id) {
-    next(null, rolesForId[id]);
+    if (rolesForId[id] == undefined) {
+        next("Role doesn't exist for id",-1);
+    } else {
+        next(null, rolesForId[id]);        
+    }
 }
 
 module.exports = 
