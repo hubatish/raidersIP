@@ -100,9 +100,9 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-const joinGame = function(name, id, next) {
-    namesForId[id] = name;
-    rolesForId[id] = getRandomInt(0, 3) == 0 ? CharacterRole.WEREWOLF : CharacterRole.VILLAGER;
+const joinGame = function(player, next) {
+    namesForId[player.id] = player.name;
+    rolesForId[player.id] = getRandomInt(0, 3) == 0 ? CharacterRole.WEREWOLF : CharacterRole.VILLAGER;
     next(null);
 /*    const player = {
         name:name,
