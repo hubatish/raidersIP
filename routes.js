@@ -84,7 +84,7 @@ router.route('/QRCode')
         var os = detectBrowser.getMobileOperatingSystem(userAgent);
 
         var endUrl = 'http://fancierfish.net';
-        switch(os){
+        switch(os) {
             case 'Android': 
                 endUrl = 'https://play.google.com/store/apps/details?id=com.Drexel.FancierFish.RemoteForRaiders';
                 break;
@@ -95,7 +95,7 @@ router.route('/QRCode')
         res.redirect(endUrl);
     });
 
-router.route('/werewolf/:joinGame')
+router.route('/werewolf/joinGame')
     .post(function(req,res) {
         console.log("Begining processing a POST join game request");
         var newPlayer = {
