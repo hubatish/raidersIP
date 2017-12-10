@@ -118,9 +118,9 @@ router.route('/werewolf/joinGame')
     });
 
 router.route('/werewolf/role')
-    .post(function(req,res) {
+    .get(function(req,res) {
         console.log("Begining processing a get role request");
-        var id = req.body.id;
+        var id = req.headers.id;
         GameHost.getPlayerRole(id, function(err, role) {
             if(err) {
                 console.log("error adding",err);

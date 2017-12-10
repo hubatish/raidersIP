@@ -121,7 +121,7 @@ const joinGame = function(player, next) {
 // let's just have state - I think it works & there's only one server.
 let gameInProgress = false;
 
-const getPlayerRole = function(id) {
+const getPlayerRole = function(id, next) {
     if (rolesForId[id] == undefined) {
         next("Role doesn't exist for id",-1);
     } else {
