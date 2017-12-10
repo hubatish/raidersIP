@@ -95,6 +95,24 @@ router.route('/QRCode')
         res.redirect(endUrl);
     });
 
+router.route('/werewolf/:joinGame')
+    .post(function(req,res) {
+        console.log("Begining processing a POST join game request");
+        var newPlayer = {
+            id: req.body.id,
+            name: req.body.name,
+        };
+        GameHost.createHost(newPlayer, function(err){
+            if(err){
+                console.log("error adding",err);
+                res.json({success:false,message:err});
+            }
+            else{
+                res.json({success:true,message:"Created"});
+            }
+        });
+    });
+
 module.exports = router;
 //register routes
 //app.use('/',router);

@@ -5,12 +5,14 @@ var url = "mongodb://localhost:27017/host";
 //Go Ahead and connect & sketchily initialize the db
 var db; 
 var collection;
+//const werewolfCollection;
 MongoClient.connect(url,function(err,database){
     if(err){
         console.log("Coudln't connect to mongo. Error"+err);
     } else{
         db = database;
         collection = db.collection('hosts');
+        //werewolfCollection = db.collection('werewolves');
         console.log("Connected to mongo, db good to go");
     }
 });
@@ -82,11 +84,54 @@ var getInternalIPs = function(externalIP,next){
     });
 }
 
+// Below code experimental for werewolf game:
+const CharacterRole = {
+    WEREWOLF: 0,
+    VILLAGER: 1,
+};
+
+let namesForId = {};
+let rolesForId = {};
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
+const joinGame = function(name, id, next) {
+    namesForId[id] = name;
+    rolesForId[id] = getRandomInt(0, 3) == 0 ? CharacterRole.WEREWOLF : CharacterRole.VILLAGER;
+    next(null);
+/*    const player = {
+        name:name,
+        id:id
+    };
+    collection.update(player, player, {upsert:true}, function(err,result) {
+        if(err) {
+            next(err);
+        } else {
+            console.log("Successful game join.");
+            next(null,result);
+        }
+    });*/
+}
+
+// let's just have state - I think it works & there's only one server.
+let gameInProgress = false;
+
+const getPlayerRole = function(id) {
+    next(null, rolesForId[id]);
+}
+
 module.exports = 
 {
     createHost:createHost,
     deleteHost:deleteHost,
     getAllHosts:getAllHosts,
-    getInternalIPs:getInternalIPs
+    getInternalIPs:getInternalIPs,
+    joinGame: joinGame,
+    getPlayerRole,
 };
 
