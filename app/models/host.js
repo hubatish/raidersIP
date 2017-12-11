@@ -90,6 +90,7 @@ const CharacterRole = {
     VILLAGER: 1,
 };
 
+// let's just have state - I think it works & there's only one server.
 let namesForId = {};
 let rolesForId = {};
 
@@ -102,24 +103,15 @@ function getRandomInt(min, max) {
 
 const joinGame = function(player, next) {
     namesForId[player.id] = player.name;
-    rolesForId[player.id] = getRandomInt(0, 3) == 0 ? CharacterRole.WEREWOLF : CharacterRole.VILLAGER;
     next(null);
-/*    const player = {
-        name:name,
-        id:id
-    };
-    collection.update(player, player, {upsert:true}, function(err,result) {
-        if(err) {
-            next(err);
-        } else {
-            console.log("Successful game join.");
-            next(null,result);
-        }
-    });*/
 }
 
-// let's just have state - I think it works & there's only one server.
-let gameInProgress = false;
+const startGame = function(next) {
+    Object.keys(namesForId).forEach((id) => {
+        rolesForId[id] = getRandomInt(0, 3) == 0 ? CharacterRole.WEREWOLF : CharacterRole.VILLAGER;
+    });
+    next(null);
+}
 
 const getPlayerRole = function(id, next) {
     if (rolesForId[id] == undefined) {
@@ -135,7 +127,8 @@ module.exports =
     deleteHost:deleteHost,
     getAllHosts:getAllHosts,
     getInternalIPs:getInternalIPs,
-    joinGame: joinGame,
+    joinGame,
     getPlayerRole,
+    startGame,
 };
 

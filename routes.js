@@ -117,6 +117,20 @@ router.route('/werewolf/joinGame')
         });
     });
 
+router.route('/werewolf/startGame')
+    .post(function(req,res) {
+        console.log("Begining processing a POST start game request");
+        GameHost.startGame(function(err){
+            if(err) {
+                console.log("error adding",err);
+                res.json({success:false,message:err});
+            }
+            else {
+                res.json({success:true,message:"Game started"});
+            }
+        });
+});
+
 router.route('/werewolf/role')
     .get(function(req,res) {
         console.log("Begining processing a get role request");
